@@ -1,3 +1,4 @@
+version: "3"
 services:
   frontend:
     build:
@@ -6,16 +7,16 @@ services:
     ports:
       - 3000:3000
     stdin_open: true
+    tty: true
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
     container_name: frontend
     restart: always
     networks:
-      - react-express
+      - frontend-back
     depends_on:
       - backend
-
   backend:
     container_name: backend
     restart: always
@@ -28,8 +29,8 @@ services:
     depends_on:
       - mongo
     networks:
-      - express-mongo
-      - react-express
+      - frontend-back
+      - back-db
     expose: 
       - 3000
   mongo:
@@ -39,9 +40,9 @@ services:
     volumes:
       - ./data:/data/db
     networks:
-      - express-mongo
+      -  back-db
     expose:
       - 27017
 networks:
-  react-express:
-  express-mongo:
+  frontend-back:
+  back-db:
